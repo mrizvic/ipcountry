@@ -40,3 +40,8 @@ Update your iptables rules
 15 0 * * * /opt/ipcountry/make-ipset.sh /opt/ipcountry/SI-ipv4.txt > /opt/ipcountry/make-ipset.sh.log4 2>&1
 15 0 * * * /opt/ipcountry/make-ipset.sh /opt/ipcountry/SI-ipv6.txt > /opt/ipcountry/make-ipset.sh.log6 2>&1
 ```
+## DISCLAIMER
+Use at your own risk.
+
+## COFFEE
+If you find this useful you can buy me a coffee :) https://ko-fi.com/markor
