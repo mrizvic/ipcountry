@@ -34,3 +34,9 @@ Update your iptables rules
 -A INPUT -p tcp -m tcp --dport 80 -j DROP
 -A INPUT -p tcp -m tcp --dport 443 -j DROP
 ```
+
+## IPSET cronjob
+```
+15 0 * * * /opt/ipcountry/make-ipset.sh /opt/ipcountry/SI-ipv4.txt > /opt/ipcountry/make-ipset.sh.log4 2>&1
+15 0 * * * /opt/ipcountry/make-ipset.sh /opt/ipcountry/SI-ipv6.txt > /opt/ipcountry/make-ipset.sh.log6 2>&1
+```
