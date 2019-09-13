@@ -2,6 +2,8 @@
 
 die() { echo "$*" 1>&2 ; exit 1; }
 
+PATH=$PATH:/usr/bin:/usr/sbin:/bin:/sbin
+
 which aggregate > /dev/null || die "ERROR: missing aggregate"
 which ipset     > /dev/null || die "ERROR: missing ipset"
 
@@ -20,17 +22,13 @@ fi
 LFILE=$(readlink -f $FILE)
 BFILE=$(basename "$FILE")
 
-
-### IF LOCAL FILE DOESNT EXIST FETCH FROM REMOTE SITE
-if [ ! -f "$LFILE" ]; then
-  echo "###: WGET $BFILE"
-  wget -O - "http://ipcountry.ts.si/$BFILE" | aggregate > $LFILE
-fi
+### FETCH FROM REMOTE SITE
+echo "###: WGET $BFILE"
+wget -O - "http://ipcountry.ts.si/$BFILE" | aggregate > $LFILE
 
 if [ ! -f "$LFILE" ]; then
   die "ERROR: $LFILE DOESNT EXIST"
 fi
-
 
 ### FLUSH EXISTING IPSET OR CREATE NEW IF DOESNT EXIST
 SETNAME=$(basename "$FILE" | cut -d '.' -f1) 
