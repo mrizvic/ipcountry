@@ -15,7 +15,7 @@ WORKDIR="$(readlink -f $(dirname "$0"))"
 FILE=$1
 
 if [ -z "$FILE" ]; then
-  die "USAGE: $ME <ipv4-networks-file>"
+  die "USAGE: $ME <ipv4-or-ipv6-cidr-networks-file>"
 fi
 
 LFILE=$(readlink -f $FILE)
