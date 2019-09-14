@@ -4,7 +4,6 @@ die() { echo "$*" 1>&2 ; exit 1; }
 
 PATH=$PATH:/usr/bin:/usr/sbin:/bin:/sbin
 
-which aggregate > /dev/null || die "ERROR: missing aggregate"
 which ipset     > /dev/null || die "ERROR: missing ipset"
 
 if [ "$EUID" -ne 0 ]; then
@@ -24,7 +23,7 @@ BFILE=$(basename "$FILE")
 
 ### FETCH FROM REMOTE SITE
 echo "###: WGET $BFILE"
-wget -O - "http://ipcountry.ts.si/$BFILE" | aggregate > $LFILE
+wget -O "$LFILE" "http://ipcountry.ts.si/$BFILE"
 
 if [ ! -f "$LFILE" ]; then
   die "ERROR: $LFILE DOESNT EXIST"
