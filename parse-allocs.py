@@ -49,7 +49,7 @@ for key in sorted(allocs):
 	fd.close()
 
 ### GENERATE index.html
-fname = "index2.html".format(key)
+fname = "country.operator.addressfamily.html".format(key)
 fd = open(fname, 'w')
 for key in sorted(allocs):
 	line = '<A HREF="{0}.txt">{0}</A><BR>\n'.format(key)
