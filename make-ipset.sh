@@ -1,24 +1,28 @@
 #!/usr/bin/env bash
 
-die() { echo "$*" 1>&2 ; exit 1; }
-
 PATH=$PATH:/usr/bin:/usr/sbin:/bin:/sbin
+ME=$(basename "$0")
+
+die() { echo "$*" 1>&2 ; exit 1; }
 
 which ipset > /dev/null || die "ERROR: missing ipset"
 [ "$EUID" -ne 0 ] && die "ERROR: run as root"
 [ -z "$1" ] && die "USAGE: $ME <ipv4-or-ipv6-cidr-networks-file>"
 
 FILE=$1
-ME=$(basename "$0")
 WORKDIR="$(readlink -f $(dirname "$0"))"
 LFILE=$(readlink -f $FILE)
 BFILE=$(basename "$FILE")
 
 ### FETCH FROM REMOTE SITE
-echo "###: WGET $BFILE"
-wget -O "$LFILE" "http://ipcountry.ts.si/$BFILE"
+if [[ $FILE =~ ://.*\.txt ]]; then
+  cd $WORKDIR
+  FILE=$BFILE
+  echo "###: WGET $FILE"
+  wget -O "$FILE" "http://ipcountry.ts.si/$FILE"
+fi
 
-[ ! -f "$LFILE" ] && die "ERROR: $LFILE DOESNT EXIST"
+[ ! -f "$FILE" ] && die "ERROR: $FILE DOESNT EXIST"
 
 ### FLUSH EXISTING IPSET OR CREATE NEW IF DOESNT EXIST
 SETNAME="${FILE%.*}"
