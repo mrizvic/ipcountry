@@ -13,7 +13,7 @@ wget -O ${ALLOCS} ftp://ftp.ripe.net/pub/stats/ripencc/membership/alloclist.txt
 ### REMOVE OLD LISTS
 rm ${WORKDIR}/*ipv4.txt
 rm ${WORKDIR}/*ipv6.txt
-rm ${WORKDIR}/index*
+rm ${WORKDIR}/country*.html
 
 ### PARSE FILE AND CREATE cc-inetfamily.txt FILES
 cat ${OUTFILE} | ${WORKDIR}/parse-delegated.py 
