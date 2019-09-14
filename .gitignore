@@ -1,3 +1,6 @@
 delegated-ripencc-extended-latest
-index.html
+alloclist.txt
+package.tar.gz
+index*
 *.txt
+*log

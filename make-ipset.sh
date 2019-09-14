@@ -4,20 +4,13 @@ die() { echo "$*" 1>&2 ; exit 1; }
 
 PATH=$PATH:/usr/bin:/usr/sbin:/bin:/sbin
 
-which ipset     > /dev/null || die "ERROR: missing ipset"
+which ipset > /dev/null || die "ERROR: missing ipset"
+[ "$EUID" -ne 0 ] && die "ERROR: run as root"
+[ -z "$1" ] && die "USAGE: $ME <ipv4-or-ipv6-cidr-networks-file>"
 
-if [ "$EUID" -ne 0 ]; then
-  die "ERROR: run as root"
-fi
-
+FILE=$1
 ME=$(basename "$0")
 WORKDIR="$(readlink -f $(dirname "$0"))"
-FILE=$1
-
-if [ -z "$FILE" ]; then
-  die "USAGE: $ME <ipv4-or-ipv6-cidr-networks-file>"
-fi
-
 LFILE=$(readlink -f $FILE)
 BFILE=$(basename "$FILE")
 
@@ -25,12 +18,10 @@ BFILE=$(basename "$FILE")
 echo "###: WGET $BFILE"
 wget -O "$LFILE" "http://ipcountry.ts.si/$BFILE"
 
-if [ ! -f "$LFILE" ]; then
-  die "ERROR: $LFILE DOESNT EXIST"
-fi
+[ ! -f "$LFILE" ] && die "ERROR: $LFILE DOESNT EXIST"
 
 ### FLUSH EXISTING IPSET OR CREATE NEW IF DOESNT EXIST
-SETNAME=$(basename "$FILE" | cut -d '.' -f1) 
+SETNAME="${FILE%.*}"
 echo "###: IPSET FLUSH || CREATE $SETNAME"
 if [[ $SETNAME =~ "ipv4" ]]; then
   ipset flush $SETNAME || ipset create $SETNAME hash:net family inet hashsize 8192 maxelem 8192
@@ -42,8 +33,8 @@ fi
 
 echo "###: IPSET POPULATE $SETNAME"
 ### ADD NEW NETWORKS
-for i in $(cat $FILE); do
-  ipset add $SETNAME $i
+for pool in $(cat $FILE); do
+  ipset add $SETNAME $pool
 done 
 
 
