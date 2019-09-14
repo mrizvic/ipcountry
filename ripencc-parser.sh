@@ -20,4 +20,4 @@ cat ${OUTFILE} | ${WORKDIR}/parse-delegated.py
 cat ${ALLOCS} | ${WORKDIR}/parse-allocs.py 
 
 ### CREATE PACKAGE
-tar cvzf ${WORKDIR}/package.tar.gz --exclude="package.tar.gz" --exclude="*log" --exclude="*.txt" --exclude="index*" --exclude-vcs -C ${WORKDIR} .
+tar cvzf ${WORKDIR}/package.tar.gz --exclude="package.tar.gz" --exclude="*log" --exclude="*.txt" --exclude-vcs -C ${WORKDIR} .
