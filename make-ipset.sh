@@ -17,9 +17,10 @@ BFILE=$(basename "$FILE")
 ### FETCH FROM REMOTE SITE
 if [[ $FILE =~ ://.*\.txt ]]; then
   cd $WORKDIR
+  URL=$FILE
   FILE=$BFILE
   echo "###: WGET $FILE"
-  wget -O "$FILE" "http://ipcountry.ts.si/$FILE"
+  wget -O "$FILE" "$URL"
 fi
 
 [ ! -f "$FILE" ] && die "ERROR: $FILE DOESNT EXIST"
