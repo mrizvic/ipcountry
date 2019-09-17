@@ -27,21 +27,26 @@ fi
 
 ### FLUSH EXISTING IPSET OR CREATE NEW IF DOESNT EXIST
 SETNAME="${FILE%.*}"
-echo "###: IPSET FLUSH || CREATE $SETNAME"
+echo "###: IPSET CREATE $SETNAME.temp"
 if [[ $SETNAME =~ "ipv4" ]]; then
-  ipset flush $SETNAME || ipset create $SETNAME hash:net family inet hashsize 8192 maxelem 8192
+  ipset create "$SETNAME.temp" hash:net family inet hashsize 8192 maxelem 8192
 elif [[ $SETNAME =~ "ipv6" ]]; then
-  ipset flush $SETNAME || ipset create $SETNAME hash:net family inet6 hashsize 8192 maxelem 8192
+  ipset create "$SETNAME.temp" hash:net family inet6 hashsize 8192 maxelem 8192
 else
   die "ERROR: ipv4 OR ipv6 STRING MISSING FROM FILENAME"
 fi
 
-echo "###: IPSET POPULATE $SETNAME"
-### ADD NEW NETWORKS
+echo "###: IPSET POPULATE $SETNAME.temp"
+### ADD NETWORKS
 for pool in $(cat $FILE); do
-  ipset add $SETNAME $pool
+  ipset add "$SETNAME.temp" $pool
 done 
 
+echo "###: IPSET SWAP OR RENAME $SETNAME.temp $SETNAME"
+ipset swap "$SETNAME.temp" "$SETNAME" || ipset rename "$SETNAME.temp" "$SETNAME"
+
+echo "###: IPSET DESTROY $SETNAME.temp"
+ipset destroy "$SETNAME.temp"
 
 echo "###: IPSET SAVE $SETNAME"
 ### SAVE FOR REBOOT
