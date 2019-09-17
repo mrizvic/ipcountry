@@ -5,7 +5,7 @@ It all started when I landed on this site
 http://www-public.imtbs-tsp.eu/~maigron/RIR_Stats/index.html
 
 So I wrote parser for some files on ftp.ripe.net which extracts data and creates large amount of .txt. Each files contains IP address pools for specific country, operator and ip address family.
-There are two variants of output files. Lets see some examples:
+There are three variants of output files. Lets see some examples:
 ```
 ...
 SI-ipv4.txt
@@ -22,7 +22,7 @@ CZ-ipv6.txt
 ```
 the files above contain IP address space per country code.
 
-The other format contains country code and operator name:
+The second format contains country code and operator name:
 ```
 ...
 si.a1.ipv4.txt
@@ -35,6 +35,16 @@ si.mobitel.ipv4.txt
 si.mobitel.ipv6.txt
 ...
 
+```
+
+Third variant are ASN files:
+```
+...
+asn5603.ipv4.txt
+asn5603.ipv6.txt
+asn29276.ipv4.txt
+asn29276.ipv6.txt
+...
 ```
 
 ## Installation
