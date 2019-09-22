@@ -4,16 +4,27 @@ WORKDIR="$(readlink -f $(dirname "$0"))"
 OUTFILE="${WORKDIR}/delegated-ripencc-extended-latest"
 ALLOCS="${WORKDIR}/alloclist.txt"
 
+which wget > /dev/null && DLAGENT="wget"
+which curl > /dev/null && DLAGENT="curl"
+[ -z "$DLAGENT" ] && die 'ERROR: please install curl or wget and make sure they are in $PATH'
+
 cd ${WORKDIR}
 
 ### FETCH FILE FROM RIPE
-wget -O ${OUTFILE} ftp://ftp.ripe.net/pub/stats/ripencc/delegated-ripencc-extended-latest
-wget -O ${ALLOCS} ftp://ftp.ripe.net/pub/stats/ripencc/membership/alloclist.txt
+
+if [ "$DLAGENT" == "wget" ]; then
+  wget -qO ${OUTFILE} ftp://ftp.ripe.net/pub/stats/ripencc/delegated-ripencc-extended-latest
+  wget -qO  ${ALLOCS} ftp://ftp.ripe.net/pub/stats/ripencc/membership/alloclist.txt
+elif [ "$DLAGENT" == "curl" ]; then
+  curl -qSs -o ${OUTFILE} ftp://ftp.ripe.net/pub/stats/ripencc/delegated-ripencc-extended-latest
+  curl -qSs -o  ${ALLOCS} ftp://ftp.ripe.net/pub/stats/ripencc/membership/alloclist.txt
+fi
+
 
 ### REMOVE OLD LISTS
-rm ${WORKDIR}/*ipv4.txt
-rm ${WORKDIR}/*ipv6.txt
-rm ${WORKDIR}/country*.html
+find ${WORKDIR} -maxdepth 1 -name '*ipv4.txt' -delete
+find ${WORKDIR} -maxdepth 1 -name '*ipv6.txt' -delete
+find ${WORKDIR} -maxdepth 1 -name 'country*.html' -delete
 
 ### PARSE FILE AND CREATE cc-inetfamily.txt FILES
 cat ${OUTFILE} | ${WORKDIR}/parse-delegated.py 
