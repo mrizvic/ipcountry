@@ -2,8 +2,11 @@
 
 PATH=$PATH:/usr/bin:/usr/sbin:/bin:/sbin
 ME=$(basename "$0")
-
 die() { echo "$*" 1>&2 ; exit 1; }
+
+which wget > /dev/null && DLAGENT="wget"
+which curl > /dev/null && DLAGENT="curl"
+[ -z "$DLAGENT" ] && die 'ERROR: please install curl or wget and make sure they are in $PATH'
 
 which ipset > /dev/null || die "ERROR: missing ipset"
 [ "$EUID" -ne 0 ] && die "ERROR: run as root"
@@ -19,8 +22,13 @@ if [[ $FILE =~ ://.*\.txt ]]; then
   cd $WORKDIR
   URL=$FILE
   FILE=$BFILE
-  echo "###: WGET $FILE"
-  wget -O "$FILE" "$URL"
+  unlink $BFILE
+  echo "###: $DLAGENT $FILE"
+  if [ "$DLAGENT" == "wget" ]; then
+    wget -qO "$FILE" "$URL"
+  elif [ "$DLAGENT" == "curl" ]; then
+    curl -qSs -o "$FILE" "$URL"
+  fi
 fi
 
 [ ! -f "$FILE" ] && die "ERROR: $FILE DOESNT EXIST"
