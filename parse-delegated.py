@@ -43,17 +43,10 @@ numcidr4={
 
 }
 
-allocs = dict()
-asnv4 = dict()
-asnv6 = dict()
-asnext = dict()
-
-### HELPER
-def addKeyVal (dictionary, key, value):
-	try: dictionary[key]
-	except KeyError: dictionary[key] = list()
-	finally: dictionary[key].append(value)
-	return
+allocs = {}
+asnv4 = {}
+asnv6 = {}
+asnext = {}
 
 for line in sys.stdin.readlines():
 	line = line.rstrip()
@@ -65,8 +58,8 @@ for line in sys.stdin.readlines():
                 cidr = numcidr4[num]
 		key = "{0}-ipv4".format(cc)
 		value = "{0}/{1}".format(netaddr, cidr)
-		addKeyVal(allocs, key, value)
-		addKeyVal(asnv4, extension, value)
+		allocs.setdefault(key, []).append(value)
+		asnv4.setdefault(extension, []).append(value)
 		continue
 
 	### FOR EACH allocated ipv6
@@ -74,52 +67,48 @@ for line in sys.stdin.readlines():
                 (registry,cc,addr_family,netaddr,cidr,date,status,extension) = line.split('|')
 		key = "{0}-ipv6".format(cc)
 		value = "{0}/{1}".format(netaddr, cidr)
-		addKeyVal(allocs, key, value)
-		addKeyVal(asnv6, extension, value)
+		allocs.setdefault(key, []).append(value)
+		asnv6.setdefault(extension, []).append(value)
 		continue
 
-	### FOR EACH allocated ipv6
+	### FOR EACH allocated asn
 	### ripencc|EU|asn|251|1|19930901|allocated|935422fc-24cc-4ad9-b447-32e3c258614a
         if line.find("|asn") > -1 and line.find("allocated",25) > 0:
 		(registry,cc,rtype,asn,value,date,status,extension) = line.split('|')
-		addKeyVal(asnext, asn, extension)
+		asnext.setdefault(asn, extension)
 		continue
 		
 ### CREATE FILE FOR EACH asn.family
 for asn in sorted(asnext):
-	ext = asnext[asn][0]
+	ext = asnext[asn]
 
 	fname = "asn{0}.ipv4.txt".format(asn)
-	fd = open(fname, 'w')
-	try:
-		for pool in asnv4[ext]:
-			fd.write("{0}\n".format(pool))
-	except Exception as e:
-			print(e)
-	fd.close()
+	with open(fname, 'w') as fd:
+		try:
+			for pool in asnv4[ext]:
+				fd.write("{0}\n".format(pool))
+		except Exception as exc:
+				print("EXCEPT: {0}".format(exc))
 
 	fname = "asn{0}.ipv6.txt".format(asn)
-	fd = open(fname, 'w')
-	try:
-		for pool in asnv6[ext]:
-			fd.write("{0}\n".format(pool))
-	except Exception as e:
-			print(e)
-	fd.close()
+	with open(fname, 'w') as fd:
+		try:
+			for pool in asnv6[ext]:
+				fd.write("{0}\n".format(pool))
+		except Exception as exc:
+				print("EXCEPT: {0}".format(exc))
 
 ### CREATE FILE FOR EACH KEY
 for key in sorted(allocs):
 	fname = "{0}.txt".format(key)
-	fd = open(fname, 'w')
-	for item in allocs[key]:
-		fd.write("{0}\n".format(item))
-	fd.close()
+	with open(fname, 'w') as fd:
+		for item in allocs[key]:
+			fd.write("{0}\n".format(item))
 
 ### GENERATE index.html
 fname = "country-addressfamily.html".format(key)
-fd = open(fname, 'w')
-for key in sorted(allocs):
-	line = '<A HREF="{0}.txt">{0}</A><BR>\n'.format(key)
-	fd.write(line)
-fd.close()
+with open(fname, 'w') as fd:
+	for key in sorted(allocs):
+		line = '<A HREF="{0}.txt">{0}</A><BR>\n'.format(key)
+		fd.write(line)
 
