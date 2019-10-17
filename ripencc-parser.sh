@@ -3,6 +3,7 @@
 WORKDIR="$(readlink -f $(dirname "$0"))"
 OUTFILE="${WORKDIR}/delegated-ripencc-extended-latest"
 ALLOCS="${WORKDIR}/alloclist.txt"
+die() { echo "$*" 1>&2 ; exit 1; }
 
 which wget > /dev/null && DLAGENT="wget"
 which curl > /dev/null && DLAGENT="curl"
