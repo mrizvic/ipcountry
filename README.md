@@ -8,15 +8,15 @@ So I wrote parser for some files on ftp.ripe.net which extracts data and creates
 There are three variants of output files. Lets see some examples:
 ```
 ...
-SI-ipv4.txt
-DE-ipv4.txt
-AT-ipv4.txt
-CZ-ipv4.txt
+SI/ipv4.txt
+DE/ipv4.txt
+AT/ipv4.txt
+CZ/ipv4.txt
 ...
-SI-ipv6.txt
-DE-ipv6.txt
-AT-ipv6.txt
-CZ-ipv6.txt
+SI/ipv6.txt
+DE/ipv6.txt
+AT/ipv6.txt
+CZ/ipv6.txt
 ...
 
 ```
@@ -25,14 +25,14 @@ the files above contain IP address space per country code.
 The second format contains country code and operator name:
 ```
 ...
-si.a1.ipv4.txt
-si.a1.ipv6.txt
-si.arnes.ipv4.txt
-si.arnes.ipv6.txt
-si.telekom.ipv4.txt
-si.telekom.ipv6.txt
-si.mobitel.ipv4.txt
-si.mobitel.ipv6.txt
+SI/a1/ipv4.txt
+SI/a1/ipv6.txt
+SI/arnes/ipv4.txt
+SI/arnes/ipv6.txt
+SI/telekom/ipv4.txt
+SI/telekom/ipv6.txt
+SI/mobitel/ipv4.txt
+SI/mobitel/ipv6.txt
 ...
 
 ```
@@ -40,10 +40,10 @@ si.mobitel.ipv6.txt
 Third variant are ASN files:
 ```
 ...
-asn5603.ipv4.txt
-asn5603.ipv6.txt
-asn29276.ipv4.txt
-asn29276.ipv6.txt
+asn/5603/ipv4.txt
+asn/5603/ipv6.txt
+asn/29276/ipv4.txt
+asn/29276/ipv6.txt
 ...
 ```
 
@@ -65,14 +65,14 @@ Or run manually to fetch files from ftp.ripe.net and create output files
 ## ipset cronjob
 Create ipset for desired country and address family
 ```
-15 0 * * * /opt/ipcountry/make-ipset.sh /opt/ipcountry/SI-ipv4.txt > /opt/ipcountry/make-ipset.sh.log4 2>&1
-15 0 * * * /opt/ipcountry/make-ipset.sh /opt/ipcountry/SI-ipv6.txt > /opt/ipcountry/make-ipset.sh.log6 2>&1
+15 0 * * * /opt/ipcountry/make-ipset.sh /opt/ipcountry/SI/ipv4.txt > /opt/ipcountry/make-ipset.sh.log4 2>&1
+15 0 * * * /opt/ipcountry/make-ipset.sh /opt/ipcountry/SI/ipv6.txt > /opt/ipcountry/make-ipset.sh.log6 2>&1
 ```
 
 You can also fetch files from remote site
 ```
-15 0 * * * /opt/ipcountry/make-ipset.sh https://yourserver/SI-ipv4.txt
-15 0 * * * /opt/ipcountry/make-ipset.sh https://yourserver/SI-ipv6.txt
+15 0 * * * /opt/ipcountry/make-ipset.sh https://yourserver/SI/ipv4.txt
+15 0 * * * /opt/ipcountry/make-ipset.sh https://yourserver/SI/ipv6.txt
 ```
 
 ## iptables
