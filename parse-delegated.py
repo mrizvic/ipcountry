@@ -3,6 +3,7 @@
 
 import sys
 import math
+import os
 
 ### for i in range(32,0,-1):    print ("'{0}': '{1}',".format(2**i,i))
 
@@ -62,7 +63,7 @@ for line in sys.stdin.readlines():
 			print(e, line[16], line)
 			continue
                 cidr = float(num)
-		key = "{0}-ipv4".format(cc)
+		key = "{0}/ipv4".format(cc)
 		value = "%s/%d" % (netaddr,(32-math.log(cidr,2)))
 		allocs.setdefault(key, []).append(value)
 		asnv4.setdefault(extension, []).append(value)
@@ -73,7 +74,7 @@ for line in sys.stdin.readlines():
 
 	if line[13:15] == 'v6':
                 (registry,cc,addr_family,netaddr,cidr,date,status,extension) = line.split('|')
-		key = "{0}-ipv6".format(cc)
+		key = "{0}/ipv6".format(cc)
 		value = "{0}/{1}".format(netaddr, cidr)
 		allocs.setdefault(key, []).append(value)
 		asnv6.setdefault(extension, []).append(value)
@@ -90,8 +91,13 @@ for line in sys.stdin.readlines():
 for asn in sorted(asnext):
 	ext = asnext[asn]
 
-	fname = "asn{0}.ipv4.txt".format(asn)
-	print(fname)
+	fname = "asn/{0}/ipv4.txt".format(asn)
+	dirname = os.path.dirname(fname)
+
+        if not os.path.exists(dirname):
+                os.makedirs(dirname)
+
+	#print(fname)
 	with open(fname, 'w') as fd:
 		try:
 			for pool in asnv4[ext]:
@@ -100,8 +106,12 @@ for asn in sorted(asnext):
 				continue
 				print("EXCEPT4: {0}".format(exc))
 
-	fname = "asn{0}.ipv6.txt".format(asn)
-	print(fname)
+	fname = "asn/{0}/ipv6.txt".format(asn)
+
+        if not os.path.exists(dirname):
+                os.makedirs(dirname)
+
+	#print(fname)
 	with open(fname, 'w') as fd:
 		try:
 			for pool in asnv6[ext]:
@@ -113,7 +123,9 @@ for asn in sorted(asnext):
 ### CREATE FILE FOR EACH KEY
 for key in sorted(allocs):
 	fname = "{0}.txt".format(key)
-	print(fname)
+        dirname = os.path.dirname(fname)
+        if not os.path.exists(dirname):
+                os.makedirs(dirname)
 	with open(fname, 'w') as fd:
 		for item in allocs[key]:
 			fd.write("{0}\n".format(item))

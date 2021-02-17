@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import os
 
 allocs = dict()
 
@@ -35,7 +36,7 @@ for line in sys.stdin.readlines():
 		family = "ipv4"
 		if ":" in network:
 			family = "ipv6"
-		key = "{0}.{1}.{2}".format(cc, tag, family)
+		key = "{0}/{1}/{2}".format(cc.upper(), tag, family)
 		addKeyVal(key, network)
 		continue
 
@@ -43,9 +44,15 @@ for line in sys.stdin.readlines():
 ### CREATE FILE FOR EACH KEY
 for key in sorted(allocs):
 	fname = "{0}.txt".format(key)
+	dirname = os.path.dirname(fname)
+
+	if not os.path.exists(dirname):
+		os.makedirs(dirname)
+
 	fd = open(fname, 'w')
 	for item in allocs[key]:
 		fd.write("{0}\n".format(item))
+
 	fd.close()
 
 ### GENERATE index.html
