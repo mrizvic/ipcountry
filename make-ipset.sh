@@ -10,9 +10,10 @@ which curl > /dev/null && DLAGENT="curl"
 
 which ipset > /dev/null || die "ERROR: missing ipset"
 [ "$EUID" -ne 0 ] && die "ERROR: run as root"
-[ -z "$1" ] && die "USAGE: $ME <ipv4-or-ipv6-cidr-networks-file>"
+[ -z "$1" ] && die "USAGE: $ME <ipv4-or-ipv6-cidr-networks-file> <ipset-name>"
 
 FILE=$1
+SETNAME=$2
 WORKDIR="$(readlink -f $(dirname "$0"))"
 LFILE=$(readlink -f $FILE)
 BFILE=$(basename "$FILE")
@@ -34,7 +35,6 @@ fi
 [ ! -f "$FILE" ] && die "ERROR: $FILE DOESNT EXIST"
 
 ### FLUSH EXISTING IPSET OR CREATE NEW IF DOESNT EXIST
-SETNAME="${FILE%.*}"
 echo "###: IPSET CREATE $SETNAME.temp"
 if [[ $SETNAME =~ "ipv4" ]]; then
   ipset create "$SETNAME.temp" hash:net family inet hashsize 8192 maxelem 8192
