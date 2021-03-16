@@ -65,14 +65,14 @@ Or run manually to fetch files from ftp.ripe.net and create output files
 ## ipset cronjob
 Create ipset for desired country and address family
 ```
-15 0 * * * /opt/ipcountry/make-ipset.sh /opt/ipcountry/SI/ipv4.txt > /opt/ipcountry/make-ipset.sh.log4 2>&1
-15 0 * * * /opt/ipcountry/make-ipset.sh /opt/ipcountry/SI/ipv6.txt > /opt/ipcountry/make-ipset.sh.log6 2>&1
+15 0 * * * /opt/ipcountry/make-ipset.sh /opt/ipcountry/SI/ipv4.txt SI-ipv4 > /opt/ipcountry/make-ipset.sh.log4 2>&1
+15 0 * * * /opt/ipcountry/make-ipset.sh /opt/ipcountry/SI/ipv6.txt SI-ipv6 > /opt/ipcountry/make-ipset.sh.log6 2>&1
 ```
 
 You can also fetch files from remote site
 ```
-15 0 * * * /opt/ipcountry/make-ipset.sh https://yourserver/SI/ipv4.txt
-15 0 * * * /opt/ipcountry/make-ipset.sh https://yourserver/SI/ipv6.txt
+15 0 * * * /opt/ipcountry/make-ipset.sh https://yourserver/SI/ipv4.txt SI-ipv4
+15 0 * * * /opt/ipcountry/make-ipset.sh https://yourserver/SI/ipv6.txt SI-ipv6
 ```
 
 ## iptables
