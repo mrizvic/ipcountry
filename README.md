@@ -1,5 +1,10 @@
 # IPCOUNTRY
 
+## What is it?
+Block or allow IP ranges from specific country and never deal with updating ACL manually :)
+
+Scripts will create `ipset` / `iptables` access lists based on country, ipv4/ipv6 or asn. ACL is periodically updated with `cronjob`. See examples below.
+
 ## Idea
 It all started when I landed on this site
 http://www-public.imtbs-tsp.eu/~maigron/RIR_Stats/index.html
