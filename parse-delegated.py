@@ -57,12 +57,12 @@ for line in sys.stdin.readlines():
 	### ripencc|UA|ipv4|213.110.96.0|8192|20090716|assigned|0bc6186a-9d14-46e9-a624-f09ebd01df38
 
 	if line[13:15] == 'v4':
-                line = line.rstrip()
-                try: (registry,cc,addr_family,netaddr,num,date,status,extension) = line.split('|')
+		line = line.rstrip()
+		try: (registry,cc,addr_family,netaddr,num,date,status,extension) = line.split('|')
 		except Exception as e:
 			print(e, line[16], line)
 			continue
-                cidr = float(num)
+		cidr = float(num)
 		key = "{0}/ipv4".format(cc)
 		value = "%s/%d" % (netaddr,(32-math.log(cidr,2)))
 		allocs.setdefault(key, []).append(value)
@@ -73,7 +73,7 @@ for line in sys.stdin.readlines():
 	### ripencc|NL|ipv6|2001:610::|29|19990819|allocated|df7485ff-b735-44f3-a51f-0606fde4527b
 
 	if line[13:15] == 'v6':
-                (registry,cc,addr_family,netaddr,cidr,date,status,extension) = line.split('|')
+		(registry,cc,addr_family,netaddr,cidr,date,status,extension) = line.split('|')
 		key = "{0}/ipv6".format(cc)
 		value = "{0}/{1}".format(netaddr, cidr)
 		allocs.setdefault(key, []).append(value)
@@ -82,7 +82,7 @@ for line in sys.stdin.readlines():
 
 	### FOR EACH asn
 	### ripencc|EU|asn|251|1|19930901|allocated|935422fc-24cc-4ad9-b447-32e3c258614a
-        if line[11:14] == 'asn':
+	if line[11:14] == 'asn':
 		(registry,cc,rtype,asn,value,date,status,extension) = line.split('|')
 		asnext.setdefault(asn, extension)
 		continue
@@ -94,8 +94,8 @@ for asn in sorted(asnext):
 	fname = "asn/{0}/ipv4.txt".format(asn)
 	dirname = os.path.dirname(fname)
 
-        if not os.path.exists(dirname):
-                os.makedirs(dirname)
+	if not os.path.exists(dirname):
+		os.makedirs(dirname)
 
 	#print(fname)
 	with open(fname, 'w') as fd:
@@ -108,8 +108,8 @@ for asn in sorted(asnext):
 
 	fname = "asn/{0}/ipv6.txt".format(asn)
 
-        if not os.path.exists(dirname):
-                os.makedirs(dirname)
+	if not os.path.exists(dirname):
+		os.makedirs(dirname)
 
 	#print(fname)
 	with open(fname, 'w') as fd:
@@ -123,9 +123,9 @@ for asn in sorted(asnext):
 ### CREATE FILE FOR EACH KEY
 for key in sorted(allocs):
 	fname = "{0}.txt".format(key)
-        dirname = os.path.dirname(fname)
-        if not os.path.exists(dirname):
-                os.makedirs(dirname)
+	dirname = os.path.dirname(fname)
+	if not os.path.exists(dirname):
+		os.makedirs(dirname)
 	with open(fname, 'w') as fd:
 		for item in allocs[key]:
 			fd.write("{0}\n".format(item))
